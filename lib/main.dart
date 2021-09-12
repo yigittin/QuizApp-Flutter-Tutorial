@@ -29,7 +29,25 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Widget> scoreKeeper = [];
 
-  int questionTracker = 0;
+  void answerCheck(bool pickedAnswer) {
+    bool correctAnswer = quizBrain.getQuestionAnswer();
+
+    if (pickedAnswer == correctAnswer) {
+      scoreKeeper.add(
+        Icon(
+          Icons.check,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      scoreKeeper.add(
+        Icon(
+          Icons.close,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +61,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                quizBrain.questions[questionTracker].questionText,
+                quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -69,28 +87,8 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked true.
                 setState(() {
-                  bool correctAnswer =
-                      quizBrain.questions[questionTracker].questionAnswer;
-                  if (correctAnswer == true) {
-                    scoreKeeper.add(
-                      Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
-                    );
-                  } else {
-                    scoreKeeper.add(
-                      Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ),
-                    );
-                  }
-                  if (questionTracker < 12) {
-                    questionTracker++;
-                  } else {
-                    questionTracker = 0;
-                  }
+                  answerCheck(true);
+                  quizBrain.nextQuestion();
                 });
               },
             ),
@@ -111,28 +109,8 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked false.
                 setState(() {
-                  bool correctAnswer =
-                      quizBrain.questions[questionTracker].questionAnswer;
-                  if (correctAnswer == false) {
-                    scoreKeeper.add(
-                      Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      ),
-                    );
-                  } else {
-                    scoreKeeper.add(
-                      Icon(
-                        Icons.close,
-                        color: Colors.red,
-                      ),
-                    );
-                  }
-                  if (questionTracker < 12) {
-                    questionTracker++;
-                  } else {
-                    questionTracker = 0;
-                  }
+                  answerCheck(false);
+                  quizBrain.nextQuestion();
                 });
               },
             ),
